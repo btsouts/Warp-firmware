@@ -60,7 +60,7 @@
 */
 #include "devBMX055.h"
 //#include "devADXL362.h"
-#include "devMMA8451Q.h"
+//#include "devMMA8451Q.h"
 //#include "devLPS25H.h"
 #include "devHDC1000.h"
 #include "devMAG3110.h"
@@ -74,6 +74,7 @@
 //#include "devPAN1326.h"
 //#include "devAS7262.h"
 //#include "devAS7263.h"
+#include "devINA219.h"
 
 #define WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
 //#define WARP_BUILD_BOOT_TO_CSVSTREAM
@@ -156,6 +157,10 @@ volatile WarpI2CDeviceState			deviceAS7262State;
 
 #ifdef WARP_BUILD_ENABLE_DEVAS7263
 volatile WarpI2CDeviceState			deviceAS7263State;
+#endif
+
+#ifdef WARP_BUILD_ENABLE_DEVINA219
+volatile WarpI2CDeviceState			deviceINA219State;
 #endif
 
 /*
@@ -1279,6 +1284,10 @@ main(void)
 	initAS7263(	0x49	/* i2cAddress */,	&deviceAS7263State	);
 #endif
 
+#ifdef WARP_BUILD_ENABLE_DEVINA219
+	initINA219(	0x40	/* i2cAddress */,	&deviceINA219State	);
+#endif
+
 
 
 	/*
@@ -1379,6 +1388,8 @@ main(void)
 		SEGGER_RTT_WriteString(0, "\r- 'b': set I2C baud rate.\n");
 		OSA_TimeDelay(gWarpMenuPrintDelayMilliseconds);
 		SEGGER_RTT_WriteString(0, "\r- 'c': set SPI baud rate.\n");
+		OSA_TimeDelay(gWarpMenuPrintDelayMilliseconds);
+		SEGGER_RTT_WriteString(0, "\r- 'C': read current sensor.\n");
 		OSA_TimeDelay(gWarpMenuPrintDelayMilliseconds);
 		SEGGER_RTT_WriteString(0, "\r- 'd': set UART baud rate.\n");
 		OSA_TimeDelay(gWarpMenuPrintDelayMilliseconds);
@@ -1756,6 +1767,36 @@ main(void)
 				if (gWarpSpiBaudRateKbps == 9999)
 				{
 					gWarpSpiBaudRateKbps = 10000;
+				}
+
+#ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
+				SEGGER_RTT_printf(0, "\r\n\tSPI baud rate: %d kb/s", gWarpSpiBaudRateKbps);
+#endif
+
+				break;
+			}
+
+			/*
+			 *	Change default SPI baud rate
+			 */
+			case 'C':
+			{
+				int menuDelayBetweenEachRun = 100;
+
+#ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
+				SEGGER_RTT_printf(0, "\r\n\tTime to read current values\n");
+#endif
+
+#ifdef WARP_BUILD_ENABLE_DEVINA219
+				printSensorDataINA219(false);
+#endif
+
+#ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
+				SEGGER_RTT_printf(0, "\r\n\tI read come current values\n");
+#endif		
+				if (menuDelayBetweenEachRun > 0)
+				{
+					OSA_TimeDelay(menuDelayBetweenEachRun);
 				}
 
 #ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF

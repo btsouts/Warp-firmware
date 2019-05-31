@@ -42,6 +42,7 @@ typedef enum
 	kWarpTypeMaskTotalVOC		= (1 << 28),
 	kWarpTypeMaskEquivalentCO2	= (1 << 29),
 
+	kWarpTypeMaskCurrentCons	= (1 << 30),
 
 	/*
 	 *	Always keep these two as the last items.
@@ -153,6 +154,7 @@ typedef enum
 	kWarpSensorAS7262,
 	kWarpSensorAS7263,
 	kWarpSensorSCD30,
+	kWarpSensorINA219
 } WarpSensorDevice;
 
 typedef enum
@@ -221,6 +223,10 @@ typedef enum
 	kWarpSensorConfigurationRegisterBME680CalibrationRegion1End	= 0xA2,
 	kWarpSensorConfigurationRegisterBME680CalibrationRegion2Start	= 0xE1,
 	kWarpSensorConfigurationRegisterBME680CalibrationRegion2End	= 0xF2,
+
+	kWarpSensorConfigurationRegisterINA219_CALIBRATION = 0x05,
+	kWarpSensorConfigurationRegisterINA219_CONFIG = 0x00
+
 } WarpSensorConfigurationRegister;
 
 typedef enum
