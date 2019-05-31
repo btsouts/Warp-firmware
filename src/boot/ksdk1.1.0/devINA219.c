@@ -406,8 +406,6 @@ readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 
 	cmdBuf[0] = deviceRegister;
 
-    SEGGER_RTT_printf(0, " A1\n");
-
 	status = I2C_DRV_MasterReceiveDataBlocking(
 							0 /* I2C peripheral instance */,
 							&slave,
@@ -416,8 +414,6 @@ readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 							(uint8_t *)deviceINA219State.i2cBuffer,
 							numberOfBytes,
 							gWarpI2cTimeoutMilliseconds);
-
-    SEGGER_RTT_printf(0, " A2\n");
 
 	if (status != kStatus_I2C_Success)
 	{
@@ -436,18 +432,11 @@ printSensorDataINA219(bool hexModeFlag)
 	WarpStatus	i2cReadStatus;
 
     //*value = ((_i2c->read() << 8) | _i2c->read());
-
-    SEGGER_RTT_printf(0, " A\n");
-
 	i2cReadStatus = readSensorRegisterINA219(INA219_REG_CURRENT, 2 /* numberOfBytes */);
-
-    SEGGER_RTT_printf(0, " B\n");
 
 	readSensorRegisterValueMSB = deviceINA219State.i2cBuffer[0];
 	readSensorRegisterValueLSB = deviceINA219State.i2cBuffer[1];
 	readSensorRegisterValueCombined = ((readSensorRegisterValueMSB & 0xFF) << 8) | (readSensorRegisterValueLSB);
-
-    SEGGER_RTT_printf(0, " C\n");
 
 	if (i2cReadStatus != kWarpStatusOK)
 	{

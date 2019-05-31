@@ -1781,27 +1781,33 @@ main(void)
 			 */
 			case 'C':
 			{
-				int menuDelayBetweenEachRun = 100;
+				bool hexModeFlag;
 
+				SEGGER_RTT_WriteString(0, "\r\n\tEnabling I2C pins...\n");
+				enableI2Cpins(menuI2cPullupValue);
+
+				SEGGER_RTT_WriteString(0, "\r\n\tHex or converted mode? ('h' or 'c')> ");
+				key = SEGGER_RTT_WaitKey();
+				hexModeFlag = (key == 'h' ? 1 : 0);
+
+				SEGGER_RTT_WriteString(0, "\r\n\tSet the time delay between each run in milliseconds (e.g., '1234')> ");
+				uint16_t	menuDelayBetweenEachRun = read4digits();
+				SEGGER_RTT_printf(0, "\r\n\tDelay between read batches set to %d milliseconds.\n\n", menuDelayBetweenEachRun);
+				OSA_TimeDelay(gWarpMenuPrintDelayMilliseconds);
+
+				while (1) {
 #ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
-				SEGGER_RTT_printf(0, "\r\n\tTime to read current values\n");
+					SEGGER_RTT_printf(0, "\r\n\tMeasured current: ");
 #endif
 
 #ifdef WARP_BUILD_ENABLE_DEVINA219
-				printSensorDataINA219(false);
-#endif
-
-#ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
-				SEGGER_RTT_printf(0, "\r\n\tI read come current values\n");
+					printSensorDataINA219(hexModeFlag);
 #endif		
-				if (menuDelayBetweenEachRun > 0)
-				{
-					OSA_TimeDelay(menuDelayBetweenEachRun);
+					if (menuDelayBetweenEachRun > 0)
+					{
+						OSA_TimeDelay(menuDelayBetweenEachRun);
+					}
 				}
-
-#ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
-				SEGGER_RTT_printf(0, "\r\n\tSPI baud rate: %d kb/s", gWarpSpiBaudRateKbps);
-#endif
 
 				break;
 			}
