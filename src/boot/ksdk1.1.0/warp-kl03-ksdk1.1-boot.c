@@ -74,7 +74,8 @@
 //#include "devPAN1326.h"
 //#include "devAS7262.h"
 //#include "devAS7263.h"
-#include "devINA219.h"
+//#include "devINA219.h"
+#include "devINA260.h"
 
 #define WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
 //#define WARP_BUILD_BOOT_TO_CSVSTREAM
@@ -161,6 +162,10 @@ volatile WarpI2CDeviceState			deviceAS7263State;
 
 #ifdef WARP_BUILD_ENABLE_DEVINA219
 volatile WarpI2CDeviceState			deviceINA219State;
+#endif
+
+#ifdef WARP_BUILD_ENABLE_DEVINA260
+volatile WarpI2CDeviceState			deviceINA260State;
 #endif
 
 /*
@@ -1288,7 +1293,9 @@ main(void)
 	initINA219(	0x40	/* i2cAddress */,	&deviceINA219State	);
 #endif
 
-
+#ifdef WARP_BUILD_ENABLE_DEVINA260
+	initINA260(	0x40	/* i2cAddress */,	&deviceINA260State	);
+#endif
 
 	/*
 	 *	Initialization: Devices hanging off SPI
@@ -1783,6 +1790,14 @@ main(void)
 			{
 				bool hexModeFlag;
 
+#ifdef WARP_BUILD_ENABLE_DEVINA219
+					SEGGER_RTT_printf(0, "\r\n\tCurrent Sensor INA219\n");
+#endif
+
+#ifdef WARP_BUILD_ENABLE_DEVINA260
+					SEGGER_RTT_printf(0, "\r\n\tCurrent Sensor INA260\n");
+#endif
+
 				SEGGER_RTT_WriteString(0, "\r\n\tEnabling I2C pins...\n");
 				enableI2Cpins(menuI2cPullupValue);
 
@@ -1797,12 +1812,17 @@ main(void)
 
 				while (1) {
 #ifdef WARP_BUILD_ENABLE_SEGGER_RTT_PRINTF
-					SEGGER_RTT_printf(0, "\r\n\tMeasured current: ");
+					SEGGER_RTT_printf(0, "\r\n\tMeasured Voltage: ");
 #endif
 
 #ifdef WARP_BUILD_ENABLE_DEVINA219
 					printSensorDataINA219(hexModeFlag);
-#endif		
+#endif
+
+#ifdef WARP_BUILD_ENABLE_DEVINA260
+					printSensorDataINA260(hexModeFlag);
+#endif
+
 					if (menuDelayBetweenEachRun > 0)
 					{
 						OSA_TimeDelay(menuDelayBetweenEachRun);

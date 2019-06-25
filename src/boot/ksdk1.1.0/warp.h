@@ -154,7 +154,8 @@ typedef enum
 	kWarpSensorAS7262,
 	kWarpSensorAS7263,
 	kWarpSensorSCD30,
-	kWarpSensorINA219
+	kWarpSensorINA219,
+	kWarpSensorINA260
 } WarpSensorDevice;
 
 typedef enum
@@ -225,7 +226,10 @@ typedef enum
 	kWarpSensorConfigurationRegisterBME680CalibrationRegion2End	= 0xF2,
 
 	kWarpSensorConfigurationRegisterINA219_CALIBRATION = 0x05,
-	kWarpSensorConfigurationRegisterINA219_CONFIG = 0x00
+	kWarpSensorConfigurationRegisterINA219_CONFIG = 0x00,
+
+	kWarpSensorConfigurationRegisterINA260_CALIBRATION = 0x05,
+	kWarpSensorConfigurationRegisterINA260_CONFIG = 0x00
 
 } WarpSensorConfigurationRegister;
 
