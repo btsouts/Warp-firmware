@@ -1784,7 +1784,7 @@ main(void)
 			}
 
 			/*
-			 *	Change default SPI baud rate
+			 *	Change default SPI baud rate -- FIXME - the description
 			 */
 			case 'C':
 			{
